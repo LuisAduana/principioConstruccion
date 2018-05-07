@@ -6,21 +6,17 @@ import conexionBaseDatos.ConexionRegistros;
 *
 * @author BiiR4
 */
-class Validadores {
+public class Validadores {
   
   ConexionRegistros conexion = new ConexionRegistros();
-  boolean validarRegistroExperiencia(ExperienciaEducativa experiencia){
+  public boolean validarRegistroExperiencia(ExperienciaEducativa experiencia) {
+          
     boolean validarNombre = false;
-    boolean validarNrc = true;
     String nombre = experiencia.getNombreExperiencia();
-    int nrc = experiencia.getNrc();
     
     if(nombre != null && !nombre.equals("")) {
       validarNombre = true;
     }
-    // if(nrc != null && !nrc.equals("")) {
-      //validarNrc = true;
-    //}
     
     if(validarNombre) {
       return true;

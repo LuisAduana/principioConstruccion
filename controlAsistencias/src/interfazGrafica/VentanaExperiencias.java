@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,10 +25,10 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
   private JTable tablaExperiencias;
   private JScrollPane paneTabla;
   private JButton botonRegistrarExperiencia;
+  private JButton botonModificarExperiencia;
   
   public VentanaExperiencias() {
     setBounds(0, 0, 540, 650);
-    setBackground(Color.WHITE);
     setLayout(null);
     cargarLabelLogo();
     cargarLabelTitulo();
@@ -39,10 +40,19 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
   
   private void cargarBotones() {
     botonRegistrarExperiencia = new JButton("EXP");
-    botonRegistrarExperiencia.setBounds(210, 15, 70, 70);
+    botonRegistrarExperiencia.setBounds(240, 15, 70, 70);
     botonRegistrarExperiencia.setLayout(null);
     botonRegistrarExperiencia.addActionListener(this);
+    botonRegistrarExperiencia.setToolTipText("Registrar nueva E.E");
     this.add(botonRegistrarExperiencia);
+    
+    botonModificarExperiencia = new JButton("MOD");
+    botonModificarExperiencia.setBounds(335, 15, 70, 70);
+    botonModificarExperiencia.setLayout(null);
+    botonModificarExperiencia.addActionListener(this);
+    botonModificarExperiencia.setToolTipText("Modificar E.E");
+    this.add(botonModificarExperiencia);
+    
   }
   
   private void construirTabla() {
@@ -88,10 +98,17 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent evento) {
+    
+    VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
+    
     if(evento.getSource() == botonRegistrarExperiencia) {
-      VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
       VentanaRegistrarExperiencia ventanaRegistro;
       ventanaRegistro = new VentanaRegistrarExperiencia(ventanaPrincipal, true);
+    }
+    
+    if(evento.getSource() == botonModificarExperiencia) {
+      VentanaConsultaExperiencia ventanaConsulta;
+      ventanaConsulta = new VentanaConsultaExperiencia(ventanaPrincipal, true);
     }
   }
 

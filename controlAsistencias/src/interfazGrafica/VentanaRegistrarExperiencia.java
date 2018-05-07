@@ -40,8 +40,7 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
 
   private void cargarPanel() {
     panelExperiencia = new JPanel();
-    panelExperiencia.setBounds(0, 0, 500, 600);
-    panelExperiencia.setBackground(Color.BLUE);
+    panelExperiencia.setBounds(0, 0, 500, 350);
     panelExperiencia.setLayout(null);
     this.add(panelExperiencia);
     cargarLabelTitulo();

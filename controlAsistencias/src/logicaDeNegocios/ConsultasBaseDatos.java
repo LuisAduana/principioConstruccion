@@ -8,6 +8,7 @@ import java.util.ArrayList;
 * @author BiiR4
 */
 public class ConsultasBaseDatos {
+  Validadores validador = new Validadores();
   
   public String[][] obtenerMatriz() {
     ConexionConsultas consultarExperiencias = new ConexionConsultas();
@@ -19,6 +20,17 @@ public class ConsultasBaseDatos {
       matrizListas[i][1] = listaExperiencias.get(i).getNrc()+"";
     }
     return matrizListas;
+  }
+  
+  public ExperienciaEducativa consultarExperiencia(String nrc) {
+    ConexionConsultas consultarExperiencia = new ConexionConsultas();
+    
+    return consultarExperiencia.buscarEsperiencia(nrc);
+  }
+  
+  public Integer enviarNrc(String nrc) {
+    Integer nrcValidado = validador.validarNrc(nrc);
+    return nrcValidado;
   }
   
 }

@@ -1,5 +1,7 @@
 package conexionBaseDatos;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,6 +39,35 @@ public class ConexionConsultas {
           JOptionPane.ERROR_MESSAGE);
     }
     return listaExperiencias;
-  }  
+  }
+
+  public ExperienciaEducativa buscarEsperiencia(String nrc) {
+    ConexionBaseDatos conexion = new ConexionBaseDatos();
+    ExperienciaEducativa experiencia = null;
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultado = null;
+    
+    connection = conexion.getConnection();
+    String consulta = "SELECT * FROM experienciaeducativa WHERE nrc = ?";
+    
+    try {
+      statement = connection.prepareStatement(consulta);
+      statement.setString(1, nrc);
+      resultado = statement.executeQuery();
+      
+      while(resultado.next() == true) {
+        experiencia = new ExperienciaEducativa();
+        experiencia.setIdExperiencia(resultado.getInt("idExperiencia"));
+        experiencia.setNrc(resultado.getInt("nrc"));
+        experiencia.setNombreExperiencia(resultado.getString("nombreExperiencia"));
+      }
+      
+    } catch (SQLException excepcion) {
+      System.out.println("Error en Consulta de Experiencia Educativa" + excepcion.getMessage());
+    }
+            
+    return experiencia;
+  }
 }
   

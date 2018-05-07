@@ -11,6 +11,19 @@ public class RegistrarBaseDatos {
   ConexionRegistros registro = new ConexionRegistros();
   Validadores validador = new Validadores();
   
+  public void modificarExperiencia(ExperienciaEducativa experiencia) {
+    if(validador.validarRegistroExperiencia(experiencia)) {
+      boolean exitoso = registro.modificarExperiencia(experiencia);
+      if(exitoso){
+        JOptionPane.showMessageDialog(null, "MODIFICACION EXITOSA");
+      } else {
+        JOptionPane.showMessageDialog(null, "FALLO EN MODIFICAR");
+      }
+    } else {
+      JOptionPane.showMessageDialog(null, "CAMPOS INVÁLIDOS", "Error",JOptionPane.WARNING_MESSAGE);
+    }
+  }
+  
   public void registrarExperiencia(ExperienciaEducativa experiencia) {
     if(validador.validarRegistroExperiencia(experiencia)) {
       boolean exitoso = registro.registrarExperiencia(experiencia);
