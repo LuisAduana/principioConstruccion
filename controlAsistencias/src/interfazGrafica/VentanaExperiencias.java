@@ -1,9 +1,12 @@
 package interfazGrafica;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,24 +15,30 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.JTableHeader;
 import logicaDeNegocios.ConsultasBaseDatos;
 
 /**
 *
 * @author BiiR4
 */
-public class VentanaExperiencias extends JPanel implements ActionListener {
+public class VentanaExperiencias extends JPanel implements ActionListener, MouseListener {
   
+  private int fila = 0;
+  private JButton botonActualizar;
+  private JButton botonModificarExperiencia;
+  private JButton botonPasarLista;
+  private JButton botonRegistrarExperiencia;
   private JLabel labelImagenLogoUv;
   private JLabel labelTitulo;
-  private JTable tablaExperiencias;
   private JScrollPane paneTabla;
-  private JButton botonRegistrarExperiencia;
-  private JButton botonModificarExperiencia;
-  
+  private JTable tablaExperiencias;
+  private String nrcSeleccionado = "";
+      
   public VentanaExperiencias() {
     setBounds(0, 0, 540, 650);
     setLayout(null);
+    setBackground(Color.WHITE);
     cargarLabelLogo();
     cargarLabelTitulo();
     cargarTablaExperiencias();
@@ -39,6 +48,21 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
   }
   
   private void cargarBotones() {
+    
+    botonActualizar = new JButton("ACT");
+    botonActualizar.setBounds(460, 110, 50, 50);
+    botonActualizar.setLayout(null);
+    botonActualizar.addActionListener(this);
+    botonActualizar.setToolTipText("Refrescar");
+    this.add(botonActualizar);
+    
+    botonPasarLista = new JButton("LIS");
+    botonPasarLista.setBounds(430, 15, 70, 70);
+    botonPasarLista.setLayout(null);
+    botonPasarLista.addActionListener(this);
+    botonPasarLista.setToolTipText("Pasar lista");
+    this.add(botonPasarLista);
+    
     botonRegistrarExperiencia = new JButton("EXP");
     botonRegistrarExperiencia.setBounds(240, 15, 70, 70);
     botonRegistrarExperiencia.setLayout(null);
@@ -59,7 +83,16 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
     ConsultasBaseDatos consulta = new ConsultasBaseDatos();
     String titulos[] = {"Experiencia Educativa", "NRC"};
     String informacion[][] = consulta.obtenerMatriz();
-    tablaExperiencias = new JTable(informacion, titulos);    
+    tablaExperiencias = new JTable(informacion, titulos){
+      @Override
+      public boolean isCellEditable(int rowIndex, int colIndex) {
+        return false;
+      }
+    };
+    tablaExperiencias.setFocusable(false);
+    JTableHeader cabecera = tablaExperiencias.getTableHeader();
+    cabecera.setPreferredSize(new Dimension(10, 20));
+    tablaExperiencias.addMouseListener(this);
     paneTabla.setViewportView(tablaExperiencias);
   }
   
@@ -101,6 +134,11 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
     
     VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
     
+    if(evento.getSource() == botonActualizar) {
+      construirTabla();
+      tablaExperiencias.repaint();
+    }
+    
     if(evento.getSource() == botonRegistrarExperiencia) {
       VentanaRegistrarExperiencia ventanaRegistro;
       ventanaRegistro = new VentanaRegistrarExperiencia(ventanaPrincipal, true);
@@ -110,7 +148,40 @@ public class VentanaExperiencias extends JPanel implements ActionListener {
       VentanaConsultaExperiencia ventanaConsulta;
       ventanaConsulta = new VentanaConsultaExperiencia(ventanaPrincipal, true);
     }
+    
+    if(evento.getSource() == botonPasarLista) {
+      if(!nrcSeleccionado.equals("")) {
+        JOptionPane.showMessageDialog(null, "NRC seleccionado : " + nrcSeleccionado);
+      } else {
+        JOptionPane.showMessageDialog(null, "Seleccione una Experiencia Educativa antes de pasar lista");
+      }
+    }
+  }
+  
+  @Override
+  public void mouseClicked(MouseEvent evento) {
+    fila = tablaExperiencias.getSelectedRow();
+    nrcSeleccionado = (tablaExperiencias.getModel().getValueAt(fila, 1).toString());
   }
 
+  @Override
+  public void mousePressed(MouseEvent me) {
+    // No hacer nada
+  }
 
+  @Override
+  public void mouseReleased(MouseEvent me) {
+    // No hacer nada
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent evento) {
+    // No hacer nada
+  }
+
+  @Override
+  public void mouseExited(MouseEvent me) {
+    // No hacer nada
+  }
+  
 }

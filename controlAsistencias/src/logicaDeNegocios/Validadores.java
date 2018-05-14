@@ -18,15 +18,11 @@ public class Validadores {
       validarNombre = true;
     }
     
-    if(validarNombre) {
-      return true;
-    } else {    
-      return false;
-    }
+    return validarNombre;
   }
   
   public Integer validarNrc(String nrc) {
-    Integer nrcValidado = null;
+    Integer nrcValidado;
     try {
       nrcValidado = Integer.parseInt(nrc);
     } catch (Exception exception) {

@@ -23,7 +23,7 @@ public class ConexionConsultas {
     try {
       Statement estatuto = conexion.getConnection().createStatement();
       ResultSet resultado = 
-          estatuto.executeQuery("SELECT nombreExperiencia, nrc FROM experienciaeducativa");
+          estatuto.executeQuery("SELECT nrc, nombreExperiencia FROM experienciaeducativa");
       while(resultado.next()) {
         experiencia = new ExperienciaEducativa();
         experiencia.setNombreExperiencia(resultado.getString("nombreExperiencia"));
@@ -58,7 +58,6 @@ public class ConexionConsultas {
       
       while(resultado.next() == true) {
         experiencia = new ExperienciaEducativa();
-        experiencia.setIdExperiencia(resultado.getInt("idExperiencia"));
         experiencia.setNrc(resultado.getInt("nrc"));
         experiencia.setNombreExperiencia(resultado.getString("nombreExperiencia"));
       }

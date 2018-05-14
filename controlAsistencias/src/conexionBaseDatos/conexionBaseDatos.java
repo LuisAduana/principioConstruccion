@@ -20,9 +20,8 @@ public class ConexionBaseDatos {
     try {
       Class.forName("com.mysql.jdbc.Driver");
       conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
-      //System.out.println("Conectado!");
       if(conn != null){
-        System.out.println("Conexion exitosa  a la BD controlasistencia!");
+        // En caso de ser exitosa la conexión, no hacer nada.
       }
     } catch (ClassNotFoundException excepcion){
       System.out.println("ocurre una ClassNotFoundException: " + excepcion.getMessage());

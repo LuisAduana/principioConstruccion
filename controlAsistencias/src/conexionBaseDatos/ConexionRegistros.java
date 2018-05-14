@@ -19,13 +19,12 @@ public class ConexionRegistros {
     ConexionBaseDatos conexion = new ConexionBaseDatos();
     PreparedStatement preStatement = null;
     connection = conexion.getConnection();
-    String consulta = "INSERT INTO experienciaeducativa (idExperiencia, nombreExperiencia, nrc) "
-              + "VALUES (?, ?, ?)";
+    String consulta = "INSERT INTO experienciaeducativa (nrc, nombreExperiencia) "
+              + "VALUES (?, ?)";
     try {
       preStatement = connection.prepareStatement(consulta);
-      preStatement.setInt(1, 0);
+      preStatement.setInt(1, experiencia.getNrc());
       preStatement.setString(2, experiencia.getNombreExperiencia());
-      preStatement.setInt(3, experiencia.getNrc());
       preStatement.execute();
       exitoso = true;
       
@@ -36,20 +35,20 @@ public class ConexionRegistros {
     return exitoso;
   }
 
-  public boolean modificarExperiencia(ExperienciaEducativa experiencia) {
+  public boolean modificarExperiencia(ExperienciaEducativa experiencia, int nrcEntero) {
     
     boolean exitoso;
     Connection connection = null;
     ConexionBaseDatos conexion = new ConexionBaseDatos();
     connection = conexion.getConnection();
-    String consulta = "UPDATE experienciaeducativa SET nombreExperiencia = ?, nrc = ? "
-        + "WHERE idExperiencia = ?";
+    String consulta = "UPDATE experienciaeducativa SET nrc = ?, nombreExperiencia = ? "
+        + "WHERE nrc = ?";
     
     try {
       PreparedStatement preStatement = connection.prepareStatement(consulta);
-      preStatement.setString(1, experiencia.getNombreExperiencia());
-      preStatement.setInt(2, experiencia.getNrc());
-      preStatement.setInt(3, experiencia.getIdExperiencia());
+      preStatement.setInt(1, experiencia.getNrc());
+      preStatement.setString(2, experiencia.getNombreExperiencia());
+      preStatement.setInt(3, nrcEntero);
       preStatement.executeUpdate();
       
       exitoso = true;

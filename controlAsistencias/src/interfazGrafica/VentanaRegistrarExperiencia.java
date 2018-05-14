@@ -118,10 +118,17 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
     ExperienciaEducativa experiencia = new ExperienciaEducativa();
     RegistrarBaseDatos registrar = new RegistrarBaseDatos();
     Integer nrc = registrar.enviarNrc(nrcTexto.getText().trim());
+    
     if(nrc != null) {
-      experiencia.setNombreExperiencia(nombreTexto.getText().trim());
-      experiencia.setNrc(nrc);
-      registrar.registrarExperiencia(experiencia);
+      int nrcEntero = Integer.parseInt(nrcTexto.getText().trim());
+      if(nrcEntero > 9999.9 && nrcEntero < 100000) {
+        experiencia.setNombreExperiencia(nombreTexto.getText().trim());
+        experiencia.setNrc(nrc);
+        registrar.registrarExperiencia(experiencia);
+      } else {
+        JOptionPane.showMessageDialog(null, "Debe ingresar un NRC válido", "Advertencia",
+            JOptionPane.ERROR_MESSAGE);
+      }
     } else {
       JOptionPane.showMessageDialog(null, "Debe ingresar un NRC válido", "Advertencia", 
           JOptionPane.ERROR_MESSAGE);

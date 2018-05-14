@@ -11,9 +11,9 @@ public class RegistrarBaseDatos {
   ConexionRegistros registro = new ConexionRegistros();
   Validadores validador = new Validadores();
   
-  public void modificarExperiencia(ExperienciaEducativa experiencia) {
+  public void modificarExperiencia(ExperienciaEducativa experiencia, int nrcEntero) {
     if(validador.validarRegistroExperiencia(experiencia)) {
-      boolean exitoso = registro.modificarExperiencia(experiencia);
+      boolean exitoso = registro.modificarExperiencia(experiencia, nrcEntero);
       if(exitoso){
         JOptionPane.showMessageDialog(null, "MODIFICACION EXITOSA");
       } else {
@@ -33,12 +33,12 @@ public class RegistrarBaseDatos {
         JOptionPane.showMessageDialog(null, "FALLO EN REGISTRO");
       }
     } else {
-      JOptionPane.showMessageDialog(null, "CAMPOS INVÁLIDOS", "Error",JOptionPane.WARNING_MESSAGE);
+      JOptionPane.showMessageDialog(null, "Nombre inválido", "Error",JOptionPane.WARNING_MESSAGE);
     }
   }
   
   public Integer enviarNrc(String nrc) {
-    Integer nrcValidado = validador.validarNrc(nrc);
+  Integer nrcValidado = validador.validarNrc(nrc);
     return nrcValidado;
   }
 }
