@@ -6,7 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import logicaDeNegocios.Alumno;
 import logicaDeNegocios.ExperienciaEducativa;
 
 /**
@@ -14,6 +17,34 @@ import logicaDeNegocios.ExperienciaEducativa;
 * @author BiiR4
 */
 public class ConexionConsultas {
+  
+  public ArrayList<Alumno> buscarAlumnos(int nrc) {
+    ConexionBaseDatos conexion = new ConexionBaseDatos();
+    ArrayList<Alumno> listaAlumnos = new ArrayList<Alumno>();
+    Alumno alumno;
+    try {
+      Statement estatuto = conexion.getConnection().createStatement();
+      ResultSet resultado = estatuto.executeQuery("SELECT nombreAlumno, apeAlumnoPat, "
+          + "apeAlumnoMat, asistencia FROM alumno WHERE nrc = " + nrc +"");
+      while(resultado.next()) {
+        alumno = new Alumno();
+        alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
+        alumno.setApePatAlumno(resultado.getString("apeAlumnoPat"));
+        alumno.setApeMatAlumno(resultado.getString("apeAlumnoMat"));
+        alumno.setAsistencia(resultado.getInt("asistencia"));
+        listaAlumnos.add(alumno);
+      }
+      resultado.close();
+      estatuto.close();
+      conexion.desconectar();
+    } catch (SQLException excepcion) {
+      System.out.println(excepcion);
+      System.out.println(excepcion.getMessage());
+      JOptionPane.showMessageDialog(null, "Error al consultar alumnos", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    }
+    return listaAlumnos;
+  }
   
   public ArrayList<ExperienciaEducativa> buscarExperiencias(){
     ConexionBaseDatos conexion = new ConexionBaseDatos();

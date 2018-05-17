@@ -6,6 +6,7 @@ package logicaDeNegocios;
 */
 public class Alumno {
   private int idAlumno;
+  private String nombreCompleto;
   private String nombreAlumno;
   private String apePatAlumno;
   private String apeMatAlumno;
@@ -66,7 +67,7 @@ public class Alumno {
     return asistencia;
   }
   
-  public void getAsistencia(int asistencia) {
+  public void setAsistencia(int asistencia) {
     this.asistencia = asistencia;
   }
   
@@ -76,6 +77,11 @@ public class Alumno {
   
   public void setIdExperiencia(int idExperiencia) {
     this.idExperiencia = idExperiencia;
+  }
+  
+  public String getNombreCompleto() {
+    nombreCompleto = nombreAlumno + apePatAlumno + apeMatAlumno + "";
+    return nombreCompleto;
   }
   
 }

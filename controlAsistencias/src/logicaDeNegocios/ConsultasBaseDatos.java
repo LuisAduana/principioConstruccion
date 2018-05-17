@@ -10,14 +10,27 @@ import java.util.ArrayList;
 public class ConsultasBaseDatos {
   Validadores validador = new Validadores();
   
-  public String[][] obtenerMatriz() {
+  public String[][] obtenerMatrizAlumno(int nrc) {
+    ConexionConsultas consultarAlumnos = new ConexionConsultas();
+    ArrayList<Alumno> listaAlumnos = consultarAlumnos.buscarAlumnos(nrc);
+    String matrizListas[][] = new String[listaAlumnos.size()][4];
+    for(int i = 0; i < listaAlumnos.size(); i++) {
+      matrizListas[i][0] = listaAlumnos.get(i).getNombeAlumno() + "";
+      matrizListas[i][1] = listaAlumnos.get(i).getApePatAlumno()+ "";
+      matrizListas[i][2] = listaAlumnos.get(i).getApeMatAlumno()+ "";
+      matrizListas[i][3] = listaAlumnos.get(i).getAsistencia() + "";
+    }
+    return matrizListas;
+  }
+  
+  public String[][] obtenerMatrizExperiencia() {
     ConexionConsultas consultarExperiencias = new ConexionConsultas();
     ArrayList<ExperienciaEducativa> listaExperiencias = 
         consultarExperiencias.buscarExperiencias();
     String matrizListas[][] = new String[listaExperiencias.size()][2];
     for(int i = 0; i < listaExperiencias.size(); i++){
-      matrizListas[i][0] = listaExperiencias.get(i).getNombreExperiencia()+"";
-      matrizListas[i][1] = listaExperiencias.get(i).getNrc()+"";
+      matrizListas[i][0] = listaExperiencias.get(i).getNombreExperiencia() + "";
+      matrizListas[i][1] = listaExperiencias.get(i).getNrc() + "";
     }
     return matrizListas;
   }

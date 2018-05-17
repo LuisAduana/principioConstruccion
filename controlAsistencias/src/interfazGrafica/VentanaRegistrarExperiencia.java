@@ -19,14 +19,14 @@ import logicaDeNegocios.RegistrarBaseDatos;
 */
 public class VentanaRegistrarExperiencia extends JDialog implements ActionListener {
 
-  private JPanel panelExperiencia;
+  private JButton cancelar;
+  private JButton registrar;
   private JLabel labelTitulo;
   private JLabel labelNombreExp;
   private JLabel labelNrc;
+  private JPanel panelExperiencia;
   private JTextField nombreTexto;
   private JTextField nrcTexto;
-  private JButton registrar;
-  private JButton cancelar;
   
   public VentanaRegistrarExperiencia(VentanaPrincipal ventanaPrincipal, boolean modal) {
     super(ventanaPrincipal, modal);
@@ -63,7 +63,6 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
     cancelar.addActionListener(this);
     cancelar.setLayout(null);
     panelExperiencia.add(cancelar);
-    
   }
   
   private void cargarTextFields() {
@@ -115,13 +114,12 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
   }
   
   private void registrar() {
-    ExperienciaEducativa experiencia = new ExperienciaEducativa();
     RegistrarBaseDatos registrar = new RegistrarBaseDatos();
     Integer nrc = registrar.enviarNrc(nrcTexto.getText().trim());
-    
     if(nrc != null) {
       int nrcEntero = Integer.parseInt(nrcTexto.getText().trim());
       if(nrcEntero > 9999.9 && nrcEntero < 100000) {
+        ExperienciaEducativa experiencia = new ExperienciaEducativa();
         experiencia.setNombreExperiencia(nombreTexto.getText().trim());
         experiencia.setNrc(nrc);
         registrar.registrarExperiencia(experiencia);

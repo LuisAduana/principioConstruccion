@@ -25,6 +25,7 @@ import logicaDeNegocios.ConsultasBaseDatos;
 public class VentanaExperiencias extends JPanel implements ActionListener, MouseListener {
   
   private int fila = 0;
+  static int nrc = 0;
   private JButton botonActualizar;
   private JButton botonModificarExperiencia;
   private JButton botonPasarLista;
@@ -35,22 +36,22 @@ public class VentanaExperiencias extends JPanel implements ActionListener, Mouse
   private JTable tablaExperiencias;
   private String nrcSeleccionado = "";
       
-  public VentanaExperiencias() {
+  VentanaExperiencias() {
     setBounds(0, 0, 540, 650);
     setLayout(null);
-    setBackground(Color.WHITE);
+    setBackground(Color.BLUE);
     cargarLabelLogo();
     cargarLabelTitulo();
     cargarTablaExperiencias();
     construirTabla();
     cargarBotones();
-    setVisible(true);
+    setVisible(false);
   }
   
   private void cargarBotones() {
     
     botonActualizar = new JButton("ACT");
-    botonActualizar.setBounds(460, 110, 50, 50);
+    botonActualizar.setBounds(460, 150, 40, 40);
     botonActualizar.setLayout(null);
     botonActualizar.addActionListener(this);
     botonActualizar.setToolTipText("Refrescar");
@@ -82,7 +83,7 @@ public class VentanaExperiencias extends JPanel implements ActionListener, Mouse
   private void construirTabla() {
     ConsultasBaseDatos consulta = new ConsultasBaseDatos();
     String titulos[] = {"Experiencia Educativa", "NRC"};
-    String informacion[][] = consulta.obtenerMatriz();
+    String informacion[][] = consulta.obtenerMatrizExperiencia();
     tablaExperiencias = new JTable(informacion, titulos){
       @Override
       public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -151,9 +152,13 @@ public class VentanaExperiencias extends JPanel implements ActionListener, Mouse
     
     if(evento.getSource() == botonPasarLista) {
       if(!nrcSeleccionado.equals("")) {
-        JOptionPane.showMessageDialog(null, "NRC seleccionado : " + nrcSeleccionado);
+        nrc = Integer.parseInt(nrcSeleccionado);
+        VentanaAlumnos panelAlumnos = new VentanaAlumnos();
+        setVisible(false);
+        panelAlumnos.setVisible(true);
       } else {
-        JOptionPane.showMessageDialog(null, "Seleccione una Experiencia Educativa antes de pasar lista");
+        JOptionPane.showMessageDialog(null, "Seleccione una Experiencia Educativa antes de pasar "
+            + "lista");
       }
     }
   }
