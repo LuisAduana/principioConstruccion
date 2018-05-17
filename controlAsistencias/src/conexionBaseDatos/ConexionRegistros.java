@@ -19,18 +19,20 @@ public class ConexionRegistros {
     ConexionBaseDatos conexion = new ConexionBaseDatos();
     PreparedStatement preStatement = null;
     connection = conexion.getConnection();
-    String consulta = "INSERT INTO experienciaeducativa (nrc, nombreExperiencia) "
-              + "VALUES (?, ?)";
+    String consulta = "INSERT INTO experienciaeducativa (nrc, nombreExperiencia, noClases) "
+              + "VALUES (?, ?, ?)";
     try {
       preStatement = connection.prepareStatement(consulta);
       preStatement.setInt(1, experiencia.getNrc());
       preStatement.setString(2, experiencia.getNombreExperiencia());
+      preStatement.setInt(3, experiencia.getNoClases());
       preStatement.execute();
       exitoso = true;
       
     } catch (SQLException ex) {
       exitoso = false;
       Logger.getLogger(ConexionRegistros.class.getName()).log(Level.SEVERE, null, ex);
+      ex.printStackTrace();
     }
     return exitoso;
   }
@@ -41,14 +43,15 @@ public class ConexionRegistros {
     Connection connection = null;
     ConexionBaseDatos conexion = new ConexionBaseDatos();
     connection = conexion.getConnection();
-    String consulta = "UPDATE experienciaeducativa SET nrc = ?, nombreExperiencia = ? "
-        + "WHERE nrc = ?";
+    String consulta = "UPDATE experienciaeducativa SET nrc = ?, nombreExperiencia = ?, "
+        + "noClases = ? WHERE nrc = ?";
     
     try {
       PreparedStatement preStatement = connection.prepareStatement(consulta);
       preStatement.setInt(1, experiencia.getNrc());
       preStatement.setString(2, experiencia.getNombreExperiencia());
-      preStatement.setInt(3, nrcEntero);
+      preStatement.setInt(3, experiencia.getNoClases());
+      preStatement.setInt(4, nrcEntero);
       preStatement.executeUpdate();
       
       exitoso = true;

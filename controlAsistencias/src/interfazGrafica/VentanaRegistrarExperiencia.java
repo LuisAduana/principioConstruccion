@@ -1,8 +1,9 @@
 package interfazGrafica;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -10,8 +11,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import logicaDeNegocios.ConsultasBaseDatos;
+import logicaDeNegocios.ExcepcionPersonal;
 import logicaDeNegocios.ExperienciaEducativa;
 import logicaDeNegocios.RegistrarBaseDatos;
+import logicaDeNegocios.Validadores;
 
 /**
 *
@@ -24,9 +28,11 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
   private JLabel labelTitulo;
   private JLabel labelNombreExp;
   private JLabel labelNrc;
+  private JLabel labelNoClases;
   private JPanel panelExperiencia;
   private JTextField nombreTexto;
   private JTextField nrcTexto;
+  private JTextField noClasesTexto;
   
   public VentanaRegistrarExperiencia(VentanaPrincipal ventanaPrincipal, boolean modal) {
     super(ventanaPrincipal, modal);
@@ -51,14 +57,14 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
   
   private void cargarBotones() {
     registrar = new JButton();
-    registrar.setBounds(150, 220, 100, 28);
+    registrar.setBounds(150, 240, 100, 28);
     registrar.setText("REGISTRAR");
     registrar.addActionListener(this);
     registrar.setLayout(null);
     panelExperiencia.add(registrar);
     
     cancelar = new JButton();
-    cancelar.setBounds(280, 220, 100, 28);
+    cancelar.setBounds(280, 240, 100, 28);
     cancelar.setText("CANCELAR");
     cancelar.addActionListener(this);
     cancelar.setLayout(null);
@@ -67,30 +73,43 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
   
   private void cargarTextFields() {
     nombreTexto = new JTextField();
-    nombreTexto.setBounds(180, 122, 200, 28);
+    nombreTexto.setBounds(180, 102, 200, 28);
     nombreTexto.setLayout(null);
     panelExperiencia.add(nombreTexto);
     
     nrcTexto = new JTextField();
-    nrcTexto.setBounds(180, 163, 200, 28);
+    nrcTexto.setBounds(180, 143, 200, 28);
     nrcTexto.setLayout(null);
     panelExperiencia.add(nrcTexto);
+    
+    noClasesTexto = new JTextField();
+    noClasesTexto.setBounds(180, 183, 200, 28);
+    noClasesTexto.setLayout(null);
+    panelExperiencia.add(noClasesTexto);
+    
   }
   
   private void cargarLabels() {
     labelNombreExp = new JLabel();
-    labelNombreExp.setBounds(25, 125, 150, 20);
+    labelNombreExp.setBounds(25, 105, 150, 20);
     labelNombreExp.setHorizontalAlignment(SwingConstants.RIGHT);
     labelNombreExp.setText("Nombre: ");
     labelNombreExp.setLayout(null);
     panelExperiencia.add(labelNombreExp);
     
     labelNrc = new JLabel();
-    labelNrc.setBounds(25, 165, 150, 20);
+    labelNrc.setBounds(25, 145, 150, 20);
     labelNrc.setHorizontalAlignment(SwingConstants.RIGHT);
     labelNrc.setText("NRC: ");
     labelNrc.setLayout(null);
-    panelExperiencia.add(labelNrc);    
+    panelExperiencia.add(labelNrc);
+
+    labelNoClases = new JLabel();
+    labelNoClases.setBounds(25, 185, 150, 20);
+    labelNoClases.setHorizontalAlignment(SwingConstants.RIGHT);
+    labelNoClases.setText("No. de Clases: ");
+    labelNoClases.setLayout(null);
+    panelExperiencia.add(labelNoClases);
   }
   
   private void cargarLabelTitulo() {
@@ -116,19 +135,37 @@ public class VentanaRegistrarExperiencia extends JDialog implements ActionListen
   private void registrar() {
     RegistrarBaseDatos registrar = new RegistrarBaseDatos();
     Integer nrc = registrar.enviarNrc(nrcTexto.getText().trim());
+    Integer noClases = registrar.enviarNoClases(noClasesTexto.getText().trim());
     if(nrc != null) {
-      int nrcEntero = Integer.parseInt(nrcTexto.getText().trim());
-      if(nrcEntero > 9999.9 && nrcEntero < 100000) {
-        ExperienciaEducativa experiencia = new ExperienciaEducativa();
-        experiencia.setNombreExperiencia(nombreTexto.getText().trim());
-        experiencia.setNrc(nrc);
-        registrar.registrarExperiencia(experiencia);
+      if(noClases != null) {
+        int nrcEntero = Integer.parseInt(nrcTexto.getText().trim());
+        int noClasesEntero = Integer.parseInt(noClasesTexto.getText().trim());
+        String nombreExperiencia = nombreTexto.getText().trim();
+        Validadores validar = new Validadores();
+        try {
+          validar.validarIntNrc(nrcEntero);
+          validar.validarNoDeClases(noClasesEntero);
+          validar.validarNombreExperiencia(nombreExperiencia);
+          
+          ExperienciaEducativa experiencia = new ExperienciaEducativa();
+          experiencia.setNombreExperiencia(nombreTexto.getText().trim());
+          experiencia.setNrc(nrc);
+          experiencia.setNoClases(noClasesEntero);
+          registrar.registrarExperiencia(experiencia);
+          
+          nrcTexto.setText("");
+          noClasesTexto.setText("");
+          nombreTexto.setText("");
+          
+        } catch (ExcepcionPersonal excepcion) {
+          JOptionPane.showMessageDialog(null, "" + excepcion.getMessage() + "");
+        }
       } else {
-        JOptionPane.showMessageDialog(null, "Debe ingresar un NRC válido", "Advertencia",
-            JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Ingrese un No. de Clases válido", "Advertencia", 
+          JOptionPane.ERROR_MESSAGE);
       }
     } else {
-      JOptionPane.showMessageDialog(null, "Debe ingresar un NRC válido", "Advertencia", 
+      JOptionPane.showMessageDialog(null, "Ingrese un NRC válido", "Advertencia", 
           JOptionPane.ERROR_MESSAGE);
     }
   }

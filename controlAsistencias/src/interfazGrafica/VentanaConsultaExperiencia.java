@@ -11,8 +11,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import logicaDeNegocios.ConsultasBaseDatos;
 import logicaDeNegocios.EliminacionBaseDatos;
+import logicaDeNegocios.ExcepcionPersonal;
 import logicaDeNegocios.ExperienciaEducativa;
 import logicaDeNegocios.RegistrarBaseDatos;
+import logicaDeNegocios.Validadores;
 
 /**
 *
@@ -30,14 +32,16 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
   private JLabel labelBuscarNrc;
   private JLabel labelNombreExp;
   private JLabel labelNrc;
+  private JLabel labelNoClases;
   private JTextField idNrc;
   private JTextField nombreTexto;
   private JTextField nrcBuscar;
   private JTextField nrcTexto;
+  private JTextField noClasesTexto;
   
   VentanaConsultaExperiencia(VentanaPrincipal ventanaPrincipal, boolean modal) {
     super(ventanaPrincipal, modal);
-    setSize(500, 350);
+    setSize(500, 400);
     setTitle("Consultar");
     setLocationRelativeTo(null);
     setResizable(false);
@@ -47,7 +51,7 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
   
   private void cargarPanel() {
     panelConsulta = new JPanel();
-    panelConsulta.setBounds(0, 0, 500, 350);
+    panelConsulta.setBounds(0, 0, 500, 400);
     panelConsulta.setLayout(null);
     this.add(panelConsulta);
     cargarLabelTitulo();
@@ -66,13 +70,6 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
     nuevo.setVisible(false);
     panelConsulta.add(nuevo);
     
-    eliminar = new JButton();
-    eliminar.setBounds(80, 270, 100, 28);
-    eliminar.setText("ELIMINAR");
-    eliminar.addActionListener(this);
-    eliminar.setLayout(null);
-    panelConsulta.add(eliminar);
-    
     buscar = new JButton();
     buscar.setBounds(355, 98, 100,28);
     buscar.setText("BUSCAR");
@@ -81,15 +78,22 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
     buscar.setVisible(true);
     panelConsulta.add(buscar);
     
+    eliminar = new JButton();
+    eliminar.setBounds(80, 320, 100, 28);
+    eliminar.setText("ELIMINAR");
+    eliminar.addActionListener(this);
+    eliminar.setLayout(null);
+    panelConsulta.add(eliminar);
+    
     modificar = new JButton();
-    modificar.setBounds(205, 270, 100, 28);
+    modificar.setBounds(205, 320, 100, 28);
     modificar.setText("MODIFICAR");
     modificar.addActionListener(this);
     modificar.setLayout(null);
     panelConsulta.add(modificar);
     
     cancelar = new JButton();
-    cancelar.setBounds(330, 270, 100, 28);
+    cancelar.setBounds(330, 320, 100, 28);
     cancelar.setText("CANCELAR");
     cancelar.addActionListener(this);
     cancelar.setLayout(null);
@@ -104,16 +108,22 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
     panelConsulta.add(nrcBuscar);
     
     nombreTexto = new JTextField();
-    nombreTexto.setBounds(140, 173, 300, 28);
+    nombreTexto.setBounds(140, 168, 300, 28);
     nombreTexto.setLayout(null);
     nombreTexto.setEditable(false);
     panelConsulta.add(nombreTexto);
     
     nrcTexto = new JTextField();
-    nrcTexto.setBounds(140, 213, 300, 28);
+    nrcTexto.setBounds(140, 208, 300, 28);
     nrcTexto.setLayout(null);
     nrcTexto.setEditable(false);
     panelConsulta.add(nrcTexto);
+    
+    noClasesTexto = new JTextField();
+    noClasesTexto.setBounds(140, 248, 300, 28);
+    noClasesTexto.setLayout(null);
+    noClasesTexto.setEditable(false);
+    panelConsulta.add(noClasesTexto);
     
     idNrc = new JTextField();
     idNrc.setBounds(0, 0, 70, 28);
@@ -132,18 +142,25 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
     panelConsulta.add(labelBuscarNrc);
     
     labelNombreExp = new JLabel();
-    labelNombreExp.setBounds(25, 175, 100, 20);
+    labelNombreExp.setBounds(25, 171, 100, 20);
     labelNombreExp.setHorizontalAlignment(SwingConstants.RIGHT);
     labelNombreExp.setText("Nombre: ");
     labelNombreExp.setLayout(null);
     panelConsulta.add(labelNombreExp);
     
     labelNrc = new JLabel();
-    labelNrc.setBounds(25, 215, 100, 20);
+    labelNrc.setBounds(25, 211, 100, 20);
     labelNrc.setHorizontalAlignment(SwingConstants.RIGHT);
     labelNrc.setText("NRC: ");
     labelNrc.setLayout(null);
     panelConsulta.add(labelNrc);
+    
+    labelNoClases = new JLabel();
+    labelNoClases.setBounds(25, 250, 100, 20);
+    labelNoClases.setHorizontalAlignment(SwingConstants.RIGHT);
+    labelNoClases.setText("No. de Clases: ");
+    labelNoClases.setLayout(null);
+    panelConsulta.add(labelNoClases);
     
   }
   
@@ -181,6 +198,9 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
       nuevo.setVisible(false);
       buscar.setVisible(true);
       nrcBuscar.setEditable(true);
+      nombreTexto.setEditable(false);
+      nrcTexto.setEditable(false);
+      noClasesTexto.setEditable(false);
       repaint();
     }
   }
@@ -201,6 +221,7 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
             nrcBuscar.setEditable(true);
             nombreTexto.setEditable(false);
             nrcTexto.setEditable(false);
+            noClasesTexto.setEditable(false);
             limpiarVentana();
           } else {
             JOptionPane.showMessageDialog(null, "Error al eliminar Experiencia");
@@ -212,22 +233,44 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
   }
   
   private void modificarExperiencia() {
-    RegistrarBaseDatos registrar = new RegistrarBaseDatos();
-    Integer nrc = registrar.enviarNrc(nrcBuscar.getText().trim());
-    if(nrc != null) {
-      int nrcEntero = Integer.parseInt(nrcBuscar.getText().trim());
-      if(nrcEntero > 9999.9 && nrcEntero < 100000) {
-        ExperienciaEducativa experiencia = new ExperienciaEducativa();
-        experiencia.setNombreExperiencia(nombreTexto.getText().trim());
-        experiencia.setNrc(Integer.parseInt(nrcTexto.getText().trim()));
+    String idExp = idNrc.getText();
+    if("".equals(idExp)) {
+      JOptionPane.showMessageDialog(null, "Debe buscar un usuario para modificarlo");
+    } else {
+      int nrcExperiencia = Integer.parseInt(idNrc.getText());
+      RegistrarBaseDatos registrar = new RegistrarBaseDatos();
+      Integer nrc = registrar.enviarNrc(nrcTexto.getText().trim());
+      Integer noClases = registrar.enviarNoClases(noClasesTexto.getText().trim());
+      if(nrc != null) {
+        if(noClases != null) {
+          int nrcEntero = Integer.parseInt(nrcTexto.getText().trim());
+          int noDeClases = Integer.parseInt(noClasesTexto.getText().trim());
+          String nombreExperiencia = nombreTexto.getText().trim();
+          Validadores validar = new Validadores();
+          try {
 
-        registrar.modificarExperiencia(experiencia, nrcEntero);
+            validar.validarModificarIntNrc(nrcEntero);
+            validar.validarNoDeClases(noDeClases);
+            validar.validarModificarNombreExperiencia(nombreExperiencia);
+
+            ExperienciaEducativa experiencia = new ExperienciaEducativa();
+            experiencia.setNombreExperiencia(nombreExperiencia);
+            experiencia.setNrc(nrcEntero);
+            experiencia.setNoClases(noDeClases);
+
+            registrar.modificarExperiencia(experiencia, nrcExperiencia);
+          } catch (ExcepcionPersonal excepcion) {
+            JOptionPane.showMessageDialog(null, "" + excepcion.getMessage() + "");
+          }
+
+        } else {
+          JOptionPane.showMessageDialog(null, "Ingrese un No. de Clases válido", "ERROR", 
+              JOptionPane.WARNING_MESSAGE);
+        }
       } else {
-        JOptionPane.showMessageDialog(null, "DATOS NO VÁLIDOS", "ERROR", 
+        JOptionPane.showMessageDialog(null, "Ingrese un NRC válido", "ERROR", 
             JOptionPane.WARNING_MESSAGE);
       }
-    } else {
-      JOptionPane.showMessageDialog(null, "DATOS NO VÁLIDOS", "ERROR", JOptionPane.WARNING_MESSAGE);
     }
   }
   
@@ -235,24 +278,43 @@ public class VentanaConsultaExperiencia extends JDialog implements ActionListene
     nombreTexto.setText("");
     nrcBuscar.setText("");
     nrcTexto.setText("");
+    noClasesTexto.setText("");
     idNrc.setText("");
   }
   
   private void consultarExperiencia() {
-    ConsultasBaseDatos consulta = new ConsultasBaseDatos();
-    ExperienciaEducativa experiencia = consulta.consultarExperiencia(nrcBuscar.getText().trim());
-    
-    if(experiencia != null) {
-      nombreTexto.setText(experiencia.getNombreExperiencia());
-      nrcTexto.setText(experiencia.getNrc()+"");
-      idNrc.setText(experiencia.getNrc()+"");
-      nombreTexto.setEditable(true);
-      nrcTexto.setEditable(true);
-      buscar.setVisible(false);
-      nrcBuscar.setEditable(false);
-      nuevo.setVisible(true);
+    RegistrarBaseDatos registrar = new RegistrarBaseDatos();
+    Integer nrc = registrar.enviarNrc(nrcBuscar.getText().trim());
+    if(nrc != null) {
+      int nrcEntero = Integer.parseInt(nrcBuscar.getText().trim());
+      Validadores validar = new Validadores();
+      try {
+        
+        validar.validarNrcBuscar(nrcEntero);
+        ConsultasBaseDatos consulta = new ConsultasBaseDatos();
+        ExperienciaEducativa experiencia = consulta.consultarExperiencia(nrcBuscar.getText().trim());
+
+        if(experiencia != null) {
+          nombreTexto.setText(experiencia.getNombreExperiencia());
+          nrcTexto.setText(experiencia.getNrc()+"");
+          idNrc.setText(experiencia.getNrc()+"");
+          noClasesTexto.setText(experiencia.getNoClases()+"");
+
+          nombreTexto.setEditable(true);
+          nrcTexto.setEditable(true);
+          noClasesTexto.setEditable(true);
+          buscar.setVisible(false);
+          nrcBuscar.setEditable(false);
+          nuevo.setVisible(true);
+        } else {
+          JOptionPane.showMessageDialog(null, "NRC NO ENCONTRADO", "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+      } catch (ExcepcionPersonal excepcion) {
+        JOptionPane.showMessageDialog(null, "" + excepcion.getMessage() + "");
+      }
     } else {
-      JOptionPane.showMessageDialog(null, "NRC NO ENCONTRADO", "ERROR", JOptionPane.WARNING_MESSAGE);
+      JOptionPane.showMessageDialog(null, "Ingrese un NRC válido", "Advertencia", 
+          JOptionPane.ERROR_MESSAGE);
     }
   }
   

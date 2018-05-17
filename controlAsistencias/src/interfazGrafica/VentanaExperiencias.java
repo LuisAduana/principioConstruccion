@@ -45,7 +45,7 @@ public class VentanaExperiencias extends JPanel implements ActionListener, Mouse
     cargarTablaExperiencias();
     construirTabla();
     cargarBotones();
-    setVisible(false);
+    setVisible(true);
   }
   
   private void cargarBotones() {
@@ -82,7 +82,7 @@ public class VentanaExperiencias extends JPanel implements ActionListener, Mouse
   
   private void construirTabla() {
     ConsultasBaseDatos consulta = new ConsultasBaseDatos();
-    String titulos[] = {"Experiencia Educativa", "NRC"};
+    String titulos[] = {"Experiencia Educativa", "NRC", "No. Clases"};
     String informacion[][] = consulta.obtenerMatrizExperiencia();
     tablaExperiencias = new JTable(informacion, titulos){
       @Override

@@ -9,10 +9,10 @@ import java.util.ArrayList;
 */
 public class ConsultasBaseDatos {
   Validadores validador = new Validadores();
+  ConexionConsultas consulta = new ConexionConsultas();
   
   public String[][] obtenerMatrizAlumno(int nrc) {
-    ConexionConsultas consultarAlumnos = new ConexionConsultas();
-    ArrayList<Alumno> listaAlumnos = consultarAlumnos.buscarAlumnos(nrc);
+    ArrayList<Alumno> listaAlumnos = consulta.buscarAlumnos(nrc);
     String matrizListas[][] = new String[listaAlumnos.size()][4];
     for(int i = 0; i < listaAlumnos.size(); i++) {
       matrizListas[i][0] = listaAlumnos.get(i).getNombeAlumno() + "";
@@ -27,10 +27,11 @@ public class ConsultasBaseDatos {
     ConexionConsultas consultarExperiencias = new ConexionConsultas();
     ArrayList<ExperienciaEducativa> listaExperiencias = 
         consultarExperiencias.buscarExperiencias();
-    String matrizListas[][] = new String[listaExperiencias.size()][2];
+    String matrizListas[][] = new String[listaExperiencias.size()][3];
     for(int i = 0; i < listaExperiencias.size(); i++){
       matrizListas[i][0] = listaExperiencias.get(i).getNombreExperiencia() + "";
       matrizListas[i][1] = listaExperiencias.get(i).getNrc() + "";
+      matrizListas[i][2] = listaExperiencias.get(i).getNoClases() + "";
     }
     return matrizListas;
   }
@@ -44,6 +45,5 @@ public class ConsultasBaseDatos {
   public Integer enviarNrc(String nrc) {
     Integer nrcValidado = validador.validarNrc(nrc);
     return nrcValidado;
-  }
-  
+  }  
 }

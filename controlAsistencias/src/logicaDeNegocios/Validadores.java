@@ -1,5 +1,6 @@
 package logicaDeNegocios;
 
+import conexionBaseDatos.ConexionConsultas;
 import conexionBaseDatos.ConexionRegistros;
 
 /**
@@ -9,20 +10,38 @@ import conexionBaseDatos.ConexionRegistros;
 public class Validadores {
   
   ConexionRegistros conexion = new ConexionRegistros();
-  public boolean validarRegistroExperiencia(ExperienciaEducativa experiencia) {
-          
-    boolean validarNombre = false;
-    String nombre = experiencia.getNombreExperiencia();
-    
-    if(nombre != null && !nombre.equals("")) {
-      validarNombre = true;
+  ConexionConsultas consultar = new ConexionConsultas();
+  
+  public void validarNombreExperiencia(String nombreExperiencia) throws ExcepcionPersonal {
+    if(nombreExperiencia.equals("")) {
+      throw new ExcepcionPersonal("El nombre no puede estar vacio");
     }
     
-    if(nombre.length() > 299) {
-      validarNombre = false;
+    if(nombreExperiencia.length() > 299) {
+      throw new ExcepcionPersonal("El nombre es demasiado largo");
     }
     
-    return validarNombre;
+    if(nombreExperiencia.length() < 2) {
+      throw new ExcepcionPersonal("El nombre es demasiado corto");
+    }
+    
+    if(consultar.existeNombreExperiencia(nombreExperiencia)) {
+      throw new ExcepcionPersonal("Ese nombre ya está registrado");
+    }
+  }
+  
+  public void validarModificarNombreExperiencia(String nombreExperiencia) throws ExcepcionPersonal{
+    if(nombreExperiencia.equals("")) {
+      throw new ExcepcionPersonal("El nombre no puede estar vacio");
+    }
+    
+    if(nombreExperiencia.length() > 299) {
+      throw new ExcepcionPersonal("El nombre es demasiado largo");
+    }
+    
+    if(nombreExperiencia.length() < 2) {
+      throw new ExcepcionPersonal("El nombre es demasiado corto");
+    }
   }
   
   public void validarApellidoPaterno(String apellidoPatAlumno) throws ExcepcionPersonal {
@@ -76,7 +95,67 @@ public class Validadores {
     if(matricula.length() < 9 || matricula.length() > 9){
       throw new ExcepcionPersonal("Matrícula no válida");
     }
+  }
+  
+  public void validarIntNrc(int nrc) throws ExcepcionPersonal {
+    if(nrc == 0) {
+      throw new ExcepcionPersonal("El NRC no puede estar vacio");
+    }
     
+    if(nrc < 10000) {
+      throw new ExcepcionPersonal("Digite un NRC de 5 dígitos");
+    }
+    
+    if(nrc > 99999.01) {
+      throw new ExcepcionPersonal("Digite un NRC de 5 dígitos");
+    }
+    
+    if(consultar.existeExperiencia(nrc)) {
+      throw new ExcepcionPersonal("Ese NRC ya existe");
+    }
+  }
+  
+  public void validarModificarIntNrc(int nrc) throws ExcepcionPersonal {
+    if(nrc == 0) {
+      throw new ExcepcionPersonal("El NRC no puede estar vacio");
+    }
+    
+    if(nrc < 10000) {
+      throw new ExcepcionPersonal("Digite un NRC de 5 dígitos");
+    }
+    
+    if(nrc > 99999.01) {
+      throw new ExcepcionPersonal("Digite un NRC de 5 dígitos");
+    }
+    
+  }
+  
+  public void validarNrcBuscar(int nrc) throws ExcepcionPersonal{
+    if(nrc == 0) {
+      throw new ExcepcionPersonal("El NRC no puede estar vacio");
+    }
+    
+    if(nrc < 10000) {
+      throw new ExcepcionPersonal("Digite un NRC de 5 dígitos");
+    }
+    
+    if(nrc > 99999.01) {
+      throw new ExcepcionPersonal("Digite un NRC de 5 dígitos");
+    }
+  }
+  
+  public void validarNoDeClases(int noClases) throws ExcepcionPersonal {
+    if(noClases == 0) {
+      throw new ExcepcionPersonal("El No. de Clases no puede estar vacio");
+    }
+    
+    if(noClases < 10) {
+      throw new ExcepcionPersonal("El No. de clases no debe ser inferior a 10");
+    }
+    
+    if(noClases > 400) {
+      throw new ExcepcionPersonal("El No. de clases no debe ser mayor a 400");
+    }
   }
   
   public Integer validarNrc(String nrc) {
@@ -87,6 +166,16 @@ public class Validadores {
       nrcValidado = null;
     }
     return nrcValidado;
+  }
+  
+  public Integer validarNoClases(String noClases) {
+    Integer noClasesValidado;
+    try {
+      noClasesValidado = Integer.parseInt(noClases);
+    } catch (Exception exception) {
+      noClasesValidado = null;
+    }
+    return noClasesValidado;
   }
   
 }

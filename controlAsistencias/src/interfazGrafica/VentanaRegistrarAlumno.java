@@ -163,7 +163,7 @@ public class VentanaRegistrarAlumno extends JDialog implements ActionListener {
       validar.validarApellidoMaterno(apellidoMatAlumno);
       validar.validarApellidoPaterno(apellidoPatAlumno);
     } catch (ExcepcionPersonal excepcion) {
-      JOptionPane.showMessageDialog(null, "| " + excepcion.getMessage() + " |");
+      JOptionPane.showMessageDialog(null, "" + excepcion.getMessage() + "");
     }
   }
   

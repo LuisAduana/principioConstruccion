@@ -12,33 +12,30 @@ public class RegistrarBaseDatos {
   Validadores validador = new Validadores();
   
   public void modificarExperiencia(ExperienciaEducativa experiencia, int nrcEntero) {
-    if(validador.validarRegistroExperiencia(experiencia)) {
-      boolean exitoso = registro.modificarExperiencia(experiencia, nrcEntero);
-      if(exitoso){
-        JOptionPane.showMessageDialog(null, "MODIFICACION EXITOSA");
-      } else {
-        JOptionPane.showMessageDialog(null, "FALLO EN MODIFICAR");
-      }
+    boolean exitoso = registro.modificarExperiencia(experiencia, nrcEntero);
+    if(exitoso){
+      JOptionPane.showMessageDialog(null, "MODIFICACION EXITOSA");
     } else {
-      JOptionPane.showMessageDialog(null, "CAMPOS INVÁLIDOS", "Error",JOptionPane.WARNING_MESSAGE);
+      JOptionPane.showMessageDialog(null, "FALLO EN MODIFICAR");
     }
   }
   
   public void registrarExperiencia(ExperienciaEducativa experiencia) {
-    if(validador.validarRegistroExperiencia(experiencia)) {
-      boolean exitoso = registro.registrarExperiencia(experiencia);
-      if(exitoso){
-        JOptionPane.showMessageDialog(null, "REGISTRO EXITOSO");
-      } else {
-        JOptionPane.showMessageDialog(null, "FALLO EN REGISTRO");
-      }
+    boolean exitoso = registro.registrarExperiencia(experiencia);
+    if(exitoso){
+      JOptionPane.showMessageDialog(null, "REGISTRO EXITOSO");
     } else {
-      JOptionPane.showMessageDialog(null, "Nombre inválido", "Error",JOptionPane.WARNING_MESSAGE);
+      JOptionPane.showMessageDialog(null, "FALLO EN REGISTRO");
     }
   }
   
   public Integer enviarNrc(String nrc) {
-  Integer nrcValidado = validador.validarNrc(nrc);
+    Integer nrcValidado = validador.validarNrc(nrc);
     return nrcValidado;
+  }
+  
+  public Integer enviarNoClases(String noClases) {
+    Integer noClasesValidado = validador.validarNoClases(noClases);
+    return noClasesValidado;
   }
 }

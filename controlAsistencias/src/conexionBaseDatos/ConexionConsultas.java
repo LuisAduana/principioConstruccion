@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import logicaDeNegocios.Alumno;
 import logicaDeNegocios.ExperienciaEducativa;
@@ -54,11 +52,12 @@ public class ConexionConsultas {
     try {
       Statement estatuto = conexion.getConnection().createStatement();
       ResultSet resultado = 
-          estatuto.executeQuery("SELECT nrc, nombreExperiencia FROM experienciaeducativa");
+          estatuto.executeQuery("SELECT nrc, nombreExperiencia, noClases FROM experienciaeducativa");
       while(resultado.next()) {
         experiencia = new ExperienciaEducativa();
         experiencia.setNombreExperiencia(resultado.getString("nombreExperiencia"));
         experiencia.setNrc(Integer.parseInt(resultado.getString("nrc")));
+        experiencia.setNoClases(Integer.parseInt(resultado.getString("noClases")));
         listaExperiencias.add(experiencia);
       }
       resultado.close();
@@ -91,13 +90,81 @@ public class ConexionConsultas {
         experiencia = new ExperienciaEducativa();
         experiencia.setNrc(resultado.getInt("nrc"));
         experiencia.setNombreExperiencia(resultado.getString("nombreExperiencia"));
+        experiencia.setNoClases(resultado.getInt("noClases"));
       }
+      
+      resultado.close();
+      conexion.desconectar();
       
     } catch (SQLException excepcion) {
       System.out.println("Error en Consulta de Experiencia Educativa" + excepcion.getMessage());
     }
             
     return experiencia;
+  }
+  
+  public boolean existeNombreExperiencia(String nombreExperiencia) {
+    boolean existeExperiencia = false;
+    ConexionBaseDatos conexion = new ConexionBaseDatos();
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultado = null;
+    
+    connection = conexion.getConnection();
+    String consulta = "SELECT * FROM experienciaeducativa WHERE nombreExperiencia = ?";
+    
+    try {
+      statement = connection.prepareStatement(consulta);
+      statement.setString(1, nombreExperiencia);
+      resultado = statement.executeQuery();
+      
+      if(resultado.next()){
+        if(resultado.getRow() > 0){
+          existeExperiencia = true;
+        }
+      }
+      
+      resultado.close();
+      conexion.desconectar();
+      statement.close();
+      
+    } catch (SQLException excepcion){
+      System.out.println("Error en Consulta de Experiencia Educativa" + excepcion.getMessage());
+    }
+    
+    return existeExperiencia;
+  }
+  
+  public boolean existeExperiencia(int nrc) {
+    boolean existeExperiencia = false;
+    ConexionBaseDatos conexion = new ConexionBaseDatos();
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultado = null;
+    
+    connection = conexion.getConnection();
+    String consulta = "SELECT * FROM experienciaeducativa WHERE nrc = ?";
+    
+    try {
+      statement = connection.prepareStatement(consulta);
+      statement.setInt(1, nrc);
+      resultado = statement.executeQuery();
+      
+      if(resultado.next()){
+        if(resultado.getRow() > 0){
+          existeExperiencia = true;
+        }
+      }
+      
+      resultado.close();
+      conexion.desconectar();
+      statement.close();
+      
+    } catch (SQLException excepcion){
+      System.out.println("Error en Consulta de Experiencia Educativa" + excepcion.getMessage());
+    }
+    
+    return existeExperiencia;
   }
 }
   
